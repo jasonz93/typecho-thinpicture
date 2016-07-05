@@ -88,10 +88,12 @@ class ThinPicture_Process implements Widget_Interface_Do
             $prefix = Typecho_Widget::widget('Widget_Options')->plugin('ThinPicture')->prefix;
             $prefix = trim($prefix, ' /');
 
-            $filename = time() . uniqid();
+            $filename = time() . uniqid() . '.jpg';
 
             $ossClient = new \OSS\OssClient($accessKeyID, $accessKeySecret, $ossInternal);
-            $ossClient->putObject($bucket, "$prefix/$filename", $resized);
+            $ossClient->putObject($bucket, "$prefix/$filename", $resized, [
+                \OSS\OssClient::OSS_CONTENT_TYPE => 'image/jpeg'
+            ]);
             $thinUrl = "http://$ossExternal/$prefix/$filename";
             $thinInfo = getimagesizefromstring($resized);
         } else {
